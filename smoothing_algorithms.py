@@ -1,6 +1,5 @@
 import numpy as np
 import skhep_testdata, uproot
-import skhep_testdata, uproot
 
 def three_median(y):
     z = []
@@ -44,34 +43,58 @@ def quadratic_interpolation(y):
                 y_out[index] = poly_func(index)
     return np.array(y_out, float)
 
-def Hanning(y):
-    z = []
-    for i in range(1, len(y)-1):
-        z_i = 0.25 * y[i-1] + 0.5 * y[i] + 0.25 * y[i+1]
-        z.append(z_i)
-    z_1 = y[0]
-    z_n = y[-1]
-    z = [z_1] + z + [z_n]
-    return np.array(z, float)
+def hanning(data, condition=False):
+    data = np.asarray(data, dtype=float)
+    smoothed = []
+
+    for i in range(1, len(data) - 1):
+        a, b, c = data[i - 1], data[i], data[i + 1]
+        if condition:
+            signs = np.sign([a, b, c])
+            if signs[0] != 0 and signs[1] != 0 and signs[2] != 0:
+                if signs[0] == -signs[1] and signs[1] == -signs[2]:
+                    smoothed.append(0.25 * a + 0.5 * b + 0.25 * c)
+                else:
+                    smoothed.append(b)
+            else:
+                smoothed.append(b)
+        else:
+            smoothed.append(0.25 * a + 0.5 * b + 0.25 * c)
+
+    smoothed = [data[0]] + smoothed + [data[-1]]
+    return np.array(smoothed, float)
 
 def smth_353QH(data):
-    return three_median(five_median(three_median(quadratic_interpolation(Hanning(data)))))
+    return three_median(five_median(three_median(quadratic_interpolation(hanning(data)))))
 
-def twicing(original_data, smooth, algorithm):
-    rough = original_data - smooth
-    z = smooth + algorithm(rough)
-    return z
+def smth_3G53QH(data):
+    return three_median(hanning(five_median(three_median(quadratic_interpolation(hanning(data)))), True))
+
+def twicing(original_data, smooth, algorithm, times=1):
+    for _ in range(times):
+        rough = original_data - smooth
+        smooth = smooth + algorithm(rough)
+    return smooth
+
+def print_both(data, mod_data):
+    h = hist.Hist(hist.axis.Regular(120, 60, 120))
+
+    h.fill(data)
+
+    h.plot()
+
+    h2 = hist.Hist(hist.axis.Regular(120, 60, 120))
+    h2.fill(mod_data)
+
+    h2.plot()
+    return 0
+
+
 
 
 #Use example
 tree = uproot.open(skhep_testdata.data_path("uproot-Zmumu.root"))["events"]
 data = tree["M"].array()
 
-h = hist.Hist(hist.axis.Regular(120, 60, 120, name="mass"))
-h.fill(data)
-h.plot()
-
-data2 = twicing(data, smth_353QH(data), smth_353QH)
-h2 = hist.Hist(hist.axis.Regular(120, 60, 120, name="mass"))
-h2.fill(data2)
-h2.plot()
+md = twicing(data, smth_353QH(data), smth_353QH, times=8)
+print_both(data, md)
