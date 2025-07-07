@@ -1,0 +1,7 @@
+numpy
+hist 
+uproot
+skhep_testdata
+matplotlib
+scipy
+sklearn
