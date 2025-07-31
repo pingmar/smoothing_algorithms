@@ -9,16 +9,19 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
     N = len(data_list)
     M = len(binnings)
 
-    fig, axs = plt.subplots(2*N, M, figsize=(figsize[0]*M, figsize[1]*N*2),
-                            gridspec_kw={'height_ratios':[3,1]*N})
+    fig, axs = plt.subplots(2 * N, M, figsize=(figsize[0] * M, figsize[1] * N * 2),
+                            gridspec_kw={'height_ratios': [3, 1] * N})
 
     if N == 1 and M == 1:
         axs = np.array([[[axs[0]], [axs[1]]]])
     elif N == 1:
         axs = np.array([[axs[0, :], axs[1, :]]])
     elif M == 1:
-        axs = np.array([[[axs[2*i][0]] for i in range(N)],
-                        [[axs[2*i+1][0]] for i in range(N)]])
+        axs_reshaped = np.empty((N, 2, 1), dtype=object)
+        for i in range(N):
+            axs_reshaped[i, 0, 0] = axs[2 * i]
+            axs_reshaped[i, 1, 0] = axs[2 * i + 1]
+        axs = axs_reshaped
     else:
         axs = axs.reshape(N, 2, M)
 
@@ -44,7 +47,7 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
                 h2 = hist.Hist(hist.axis.Regular(bins_number, s, e))
                 h2[...] = mod_data
 
-                main_plot_artists = h2.plot(ax=ax_main, label=f"{algo_fn} - ({ratio_val:.4f}, {ks_pvalue:.4f}, {chi2_val:.4f})")
+                main_plot_artists = h2.plot(ax=ax_main, label=f"{algo_fn} - ({ratio_val:.2f}, {ks_pvalue:.3f}, {chi2_val:.2f})")
                 line_color = main_plot_artists[0][0].get_edgecolor()
 
                 x = h.axes[0].centers
@@ -59,7 +62,6 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
             ax_ratio.axhline(1.0, color='gray', linestyle='--', linewidth=0.8)
             ax_ratio.set_ylim(0, 2)
             ax_ratio.set_ylabel("Ratio")
-            ax_ratio.set_xlabel(f"Bin Center")
 
     plt.tight_layout()
     plt.show()
