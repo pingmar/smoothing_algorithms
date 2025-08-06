@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hist_smooth"
+description = "A great package."
+readme = "README.md"
+
+authors = [
+  { name = "My Name", email = "me@email.com" },
+]
+maintainers = [
+  { name = "My Organization", email = "myemail@email.com" },
+]
+requires-python = ">=3.9"
+
+dependencies = [
+  "hist",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/pingmar/smoothing_algorithms/tree/main"
