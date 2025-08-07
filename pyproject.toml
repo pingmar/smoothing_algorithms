@@ -3,22 +3,22 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hist_smooth"
+name = "hist-smooth"
+version = "0"
 description = "A great package."
 readme = "README.md"
 
 authors = [
-  { name = "My Name", email = "me@email.com" },
-]
-maintainers = [
-  { name = "My Organization", email = "myemail@email.com" },
+  { name = "Roman", email = "petrov.romash@gmail.com" },
 ]
 requires-python = ">=3.9"
 
 dependencies = [
-  "hist",
+  "hist[plot,fit]",
 ]
 
-
 [project.urls]
-Homepage = "https://github.com/pingmar/smoothing_algorithms/tree/main"
+Homepage = "https://github.com/pingmar/smoothing_algorithms"
+
+[tool.hatch.build]
+sources = ["src"]
