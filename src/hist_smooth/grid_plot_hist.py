@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import hist
-from smoothing_lib.smoothing_api import Smoothing
-from smoothing_lib.statistics_utils import reduced_chi2, ks_2samp
+from .smoothing_api import Smoothing
+from .statistics_utils import reduced_chi2, ks_2samp
 
 def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
 

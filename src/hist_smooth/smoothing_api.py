@@ -1,4 +1,4 @@
-from smoothing_lib.base_smoothing import (
+from .base_smoothing import (
     moving_median_odd,
     hanning,
     quadratic_interpolation,
@@ -7,7 +7,7 @@ from smoothing_lib.base_smoothing import (
     even_median_two,
 )
 
-from smoothing_lib.tukey_smoothing import (
+from .tukey_smoothing import (
     ALGORITHMS
 )
 

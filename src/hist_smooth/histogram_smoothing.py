@@ -1,6 +1,6 @@
 import numpy as np
 import hist
-from smoothing_lib.statistics_utils import (
+from .statistics_utils import (
     get_local_extrema_binning,
     get_ratio_hist,
     apply_smoothing_kernel
