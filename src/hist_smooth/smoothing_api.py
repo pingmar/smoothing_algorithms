@@ -68,9 +68,11 @@ def smooth_rebin_parabolic(hnom_hist, hsys_hist):
 
     return smooth_histogram(hnom_hist, hsys_hist, nmax=1)
 
-def smooth_hist_general(hnom_hist, hsys_hist, algorithm,
+def smooth_hist_general(hnom_hist, algorithm, hsys_hist=None,
                          apply_smooth=True, endrule='median',
                          twice=0):
+    hnom_hist = hnom_hist.copy()
+    
     if algorithm == "monotonic":
         hnew = smooth_rebin_monotonic(hnom_hist, hsys_hist)
     elif algorithm == "parabolic":
