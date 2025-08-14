@@ -3,6 +3,7 @@ import numpy as np
 import hist
 from hist_smooth.smoothing_api import smooth_hist_general
 from hist_smooth.statistics_utils import reduced_chi2, ks_2samp
+import boost_histogram as bh
 
 def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hsys_hist=None,
                          apply_smooth=True, endrule='median', twice=0):
@@ -29,7 +30,7 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hs
     for i, data in enumerate(data_list):
         for j, bin_cfg in enumerate(binnings):
             bins_number, s, e = bin_cfg
-            h = hist.Hist(hist.axis.Regular(bins_number, s, e)).fill(data)
+            h = hist.Hist(hist.axis.Regular(bins_number, s, e), storage=bh.storage.Weight()).fill(data)
             bin_counts = h.counts()
             variances = h.variances()
 
@@ -40,7 +41,7 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hs
 
             for algo_fn in algorithms:
 
-                h2 = hist.Hist(hist.axis.Regular(bins_number, s, e))
+                h2 = hist.Hist(hist.axis.Regular(bins_number, s, e), storage=bh.storage.Weight())
                 h2 = smooth_hist_general(h, algorithm=algo_fn, hsys_hist=hsys_hist, apply_smooth=apply_smooth, endrule=endrule, twice=twice)
                 mod_data = h2.values()
 
@@ -66,4 +67,3 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hs
 
     plt.tight_layout()
     plt.show()
-
