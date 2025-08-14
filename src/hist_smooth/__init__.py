@@ -1,0 +1,2 @@
+from hist_smooth.grid_plot_hist import plot_grid_with_smoothing
+from hist_smooth.smoothing_api import smooth_hist_general
