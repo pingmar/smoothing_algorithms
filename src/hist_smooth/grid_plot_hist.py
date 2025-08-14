@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import hist
-from hist_smooth.smoothing_api import Smoothing
+#from hist_smooth.smoothing_api import Smoothing
 from hist_smooth.statistics_utils import reduced_chi2, ks_2samp
 
 def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
@@ -65,3 +65,4 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
 
     plt.tight_layout()
     plt.show()
+
