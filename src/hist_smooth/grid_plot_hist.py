@@ -41,7 +41,7 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hs
             for algo_fn in algorithms:
 
                 h2 = hist.Hist(hist.axis.Regular(bins_number, s, e))
-                h2 = smooth_hist_general(h2, algorithm=algo_fn, hsys_hist=hsys_hist, apply_smooth=apply_smooth, endrule=endrule, twice=twice)
+                h2 = smooth_hist_general(h, algorithm=algo_fn, hsys_hist=hsys_hist, apply_smooth=apply_smooth, endrule=endrule, twice=twice)
                 mod_data = h2.values()
 
                 ratio_val = np.sum(mod_data) / np.sum(bin_counts) if np.sum(bin_counts) != 0 else np.nan
@@ -66,3 +66,4 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hs
 
     plt.tight_layout()
     plt.show()
+
