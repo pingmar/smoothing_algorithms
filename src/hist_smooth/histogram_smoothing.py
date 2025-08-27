@@ -1,6 +1,6 @@
 import numpy as np
 import hist
-from smoothing_lib.statistics_utils import (
+from hist_smooth.statistics_utils import (
     get_local_extrema_binning,
     get_ratio_hist,
     apply_smoothing_kernel
@@ -29,10 +29,4 @@ def smooth_histogram(hnom_hist, hsys_hist, nmax, apply_smooth=True):
     hnew[...] = smoothed
     return hnew
 
-def smooth_rebin_monotonic(hnom_hist, hsys_hist):
 
-    return smooth_histogram(hnom_hist, hsys_hist, nmax=0)
-
-def smooth_rebin_parabolic(hnom_hist, hsys_hist):
-
-    return smooth_histogram(hnom_hist, hsys_hist, nmax=1)

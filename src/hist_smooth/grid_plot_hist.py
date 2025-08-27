@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import hist
-from smoothing_lib.smoothing_api import Smoothing
-from smoothing_lib.statistics_utils import reduced_chi2, ks_2samp
+from hist_smooth.smoothing_api import smooth_hist_general
+from hist_smooth.statistics_utils import reduced_chi2, ks_2samp
+import boost_histogram as bh
 
-def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
+def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4), hsys_hist=None,
+                         apply_smooth=True, endrule='median', twice=0):
 
     N = len(data_list)
     M = len(binnings)
@@ -28,7 +30,7 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
     for i, data in enumerate(data_list):
         for j, bin_cfg in enumerate(binnings):
             bins_number, s, e = bin_cfg
-            h = hist.Hist(hist.axis.Regular(bins_number, s, e)).fill(data)
+            h = hist.Hist(hist.axis.Regular(bins_number, s, e), storage=bh.storage.Weight()).fill(data)
             bin_counts = h.counts()
             variances = h.variances()
 
@@ -38,14 +40,14 @@ def plot_grid_with_smoothing(data_list, binnings, algorithms, figsize=(5, 4)):
             h.plot(ax=ax_main, label='Original')
 
             for algo_fn in algorithms:
-                mod_data = Smoothing(bin_counts, algo_fn, twice=1)
+
+                h2 = hist.Hist(hist.axis.Regular(bins_number, s, e), storage=bh.storage.Weight())
+                h2 = smooth_hist_general(h, algorithm=algo_fn, hsys_hist=hsys_hist, apply_smooth=apply_smooth, endrule=endrule, twice=twice)
+                mod_data = h2.values()
 
                 ratio_val = np.sum(mod_data) / np.sum(bin_counts) if np.sum(bin_counts) != 0 else np.nan
                 ks_stat, ks_pvalue = ks_2samp(bin_counts, mod_data)
                 chi2_val = reduced_chi2(bin_counts, mod_data, variances)
-
-                h2 = hist.Hist(hist.axis.Regular(bins_number, s, e))
-                h2[...] = mod_data
 
                 main_plot_artists = h2.plot(ax=ax_main, label=f"{algo_fn} - ({ratio_val:.2f}, {ks_pvalue:.3f}, {chi2_val:.2f})")
                 line_color = main_plot_artists[0][0].get_edgecolor()
