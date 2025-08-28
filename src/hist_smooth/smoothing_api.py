@@ -9,10 +9,6 @@ from hist_smooth.base_smoothing import (
     twicing,
 )
 
-from hist_smooth.tukey_smoothing import (
-    ALGORITHMS
-)
-
 from hist_smooth.statistics_utils import (
     get_local_extrema_binning,
     get_ratio_hist,
