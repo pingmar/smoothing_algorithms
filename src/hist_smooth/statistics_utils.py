@@ -109,5 +109,9 @@ def get_local_extrema_binning(hnom, hsys, hnom_err, nmax, stat_err_threshold=0.0
         if stat_error(hnom, hnom_err, bins[i-1], bins[i]) > stat_err_threshold:
             to_remove.append(i)
     for idx in reversed(to_remove):
-        bins.pop(idx)
+        if len(bins) > 2:
+            bins.pop(idx)
+
+    if len(bins) < 2:
+        bins = [0, n_bins]
     return bins
