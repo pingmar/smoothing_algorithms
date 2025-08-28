@@ -1,7 +1,8 @@
 try:
     import ROOT
 except ModuleNotFoundError:
-    raise SystemExit("Can't find ROOT. Please install ROOT.")
+    ROOT = None
+    print("ROOT is not installed. ROOT-dependent functions will not work.")
 
 from hist_smooth.smoothing_api import tukey_smoothing, hist_rebin
 
