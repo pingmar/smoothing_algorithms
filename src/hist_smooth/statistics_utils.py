@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import chi2
+from scipy.stats import ks_2samp, chi2
 from typing import List
 
 
@@ -319,3 +319,4 @@ def _second_pass_bins(
     for i in to_remove:
         del bins[i]
     return bins
+
