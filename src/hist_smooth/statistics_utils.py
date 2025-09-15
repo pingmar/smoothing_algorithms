@@ -88,26 +88,41 @@ def apply_smoothing_kernel(values):
     return smooth
 
 def get_local_extrema_binning(hnom, hsys, hnom_err, nmax, stat_err_threshold=0.05):
-
     n_bins = len(hnom)
-    total_sum, total_err = np.sum(hnom), np.sqrt(np.sum(hnom_err**2))
+
+    total_sum  = np.sum(hnom)
+    total_err  = np.sqrt(np.sum(hnom_err**2))
     if total_sum > 0 and abs(total_err/total_sum) > stat_err_threshold:
         return [0, n_bins]
 
-    bins = list(range(n_bins + 1))
-    ratio = get_ratio_hist(hnom, hsys, bins)
+    bins   = list(range(n_bins + 1))
+    ratio  = get_ratio_hist(hnom, hsys, bins)
     extrema = find_extrema(ratio)
 
     while len(extrema) > nmax + 2:
-        pos = find_smaller_chi2(hnom, hsys, hnom_err, extrema)
+        pos  = find_smaller_chi2(hnom, hsys, hnom_err, extrema)
         bins = merge_bins(extrema[pos], extrema[pos+1], bins)
         ratio = get_ratio_hist(hnom, hsys, bins)
         extrema = find_extrema(ratio)
 
+    bins = _second_pass_bins(hnom, hnom_err, bins, stat_err_threshold)
+    return bins
+
+def _second_pass_bins(hnom, hnom_err, bins, stat_err_threshold):
+    fst_idx = len(bins) - 1
+    lst_idx = len(bins) - 1
     to_remove = []
-    for i in range(1, len(bins)):
-        if stat_error(hnom, hnom_err, bins[i-1], bins[i]) > stat_err_threshold:
-            to_remove.append(i)
-    for idx in reversed(to_remove):
-        bins.pop(idx)
+    while fst_idx != 0:
+        if fst_idx == lst_idx:
+            fst_idx -= 1
+        else:
+            beg, end = bins[fst_idx], bins[lst_idx]
+            se = stat_error(hnom, hnom_err, beg, end)
+            if se > stat_err_threshold or se != se:
+                to_remove.append(fst_idx)
+                fst_idx -= 1
+            else:
+                lst_idx = fst_idx
+    for i in to_remove:
+        del bins[i]
     return bins
