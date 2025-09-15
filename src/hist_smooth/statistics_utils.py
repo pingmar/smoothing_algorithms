@@ -319,4 +319,3 @@ def _second_pass_bins(
     for i in to_remove:
         del bins[i]
     return bins
-

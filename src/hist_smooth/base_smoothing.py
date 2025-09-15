@@ -14,9 +14,7 @@ def moving_median_odd(data: np.ndarray | list[float], window: int, endrule: str 
     window : int
         Size of the moving window (must be odd).
     endrule : {"median", "keep"}, optional
-        Rule for handling boundaries:
-        - "median": apply progressively smaller medians at edges
-        - "keep": retain original values at edges
+        Rule for handling boundaries in median smoothing.
         Default is "median".
 
     Returns

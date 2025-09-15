@@ -7,7 +7,6 @@ import boost_histogram as bh
 from collections.abc import Callable
 from typing import Sequence
 
-
 def plot_grid_with_smoothing(
     data_list: Sequence[np.ndarray],
     binnings: Sequence[tuple[int, float, float]],
@@ -103,13 +102,13 @@ def plot_grid_with_smoothing(
             h.plot(ax=ax_main, label="Original")
 
             for algo_fn in algorithms:
-                h2 = hist.Hist(hist.axis.Regular(bins_number, s, e),
-                               storage=bh.storage.Weight())
+                #h2 = hist.Hist(hist.axis.Regular(bins_number, s, e),
+                #               storage=bh.storage.Weight())
+                hsys_hist = h # need to fix
                 h2 = smooth_hist_general(
                     h,
                     algorithm=algo_fn,
                     hsys_hist=hsys_hist,
-                    apply_smooth=apply_smooth,
                     endrule=endrule,
                     twice=twice,
                 )
